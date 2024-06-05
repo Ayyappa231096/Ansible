@@ -1,0 +1,87 @@
+Day 3: Writing Your First Ansible Playbook
+
+Understanding YAML basics and Ansible playbook structure.
+Introduction to Ansible structure: Playbook, Play, Modules, Tasks and Collections.
+Hands-on: Writing a playbook to install apache2 and deploy a static app on aws.
+
+
+Day 3: Writing Your First Ansible Playbook
+
+Today, we'll dive into crafting our initial Ansible playbook! We'll explore YAML basics, Ansible's core components, and build a playbook to set up a web server on AWS.
+
+YAML for Playbooks:
+
+Ansible playbooks are written in YAML (YAML Ain't Markup Language), a human-readable data serialization format. Here's a quick rundown:
+
+ Indentation Matters: Indentation defines the hierarchy of elements. Indented items are nested within their parent elements.
+ Comments: Use  for comments (ignored during execution).
+ Data Types: YAML supports various data types like strings, integers, booleans, lists, and dictionaries.
+
+Ansible Playbook Structure:
+
+A playbook is a YAML file containing plays, which define tasks to be executed on specific groups of hosts. Let's break down the key components:
+
+ Playbooks: The main unit of automation, containing plays and variables.
+ Plays: Group related tasks targeting specific hosts or groups defined in your inventory.
+ Modules: Reusable code units that perform specific actions (e.g., installing software, copying files).
+ Tasks: Individual actions within a play that utilize modules with defined parameters.
+ Collections: Reusable sets of modules and plugins for specific functionalities.
+
+Playbook for Apache and Static App on AWS
+
+Now, let's build a playbook to install Apache2 and deploy a static web application on an AWS instance:
+
+1. Inventory Setup:
+
+Ensure your inventory file (inventory.ini) defines the AWS instance where you want to deploy the application. You can use its hostname or IP address.
+
+2. Playbook Structure:
+
+Create a new file named apache_app.yaml with the following content:
+
+yaml
+---
+- name: Deploy static app to AWS
+  hosts: aws_instance_name   Replace with your actual hostname/IP
+  become: true   Grant sudo privileges for tasks
+
+  tasks:
+    - name: Update package lists
+      apt: update_cache=yes
+
+    - name: Install Apache2
+      apt: name=apache2 state=present
+
+    - name: Copy static app files
+      copy:
+        src: /path/to/your/app/files   Replace with the source directory
+        dest: /var/www/html
+        owner: www-data
+        group: www-data
+
+    - name: Ensure Apache is running
+      service: name=apache2 state=started
+      enabled: yes
+
+   
+Explanation:
+
+ ---: YAML document start.
+ - name: Defines the playbook name.
+ hosts: Specifies the target host (AWS instance).
+ become: true: Grants sudo privileges for tasks that require elevated access.
+ tasks: List of tasks to be executed.
+   Each task uses modules with specific parameters.
+   apt module updates package lists and installs Apache2.
+   copy module transfers your static app files to the web server document root (/var/www/html).
+   service module ensures Apache is running and enabled at boot.
+   
+3. Running the Playbook:
+
+Save the apache_app.yaml file and execute the playbook using:
+
+
+ansible-playbook -i inventory.ini apache_app.yaml
+
+
+This command runs the playbook, deploying your static application to the designated AWS instance.
