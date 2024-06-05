@@ -1,0 +1,189 @@
+Day 2: Ansible Adhoc Commands
+
+-Passwordless Authentication
+-Ansible Inventory
+-Understanding Adhoc commands and their usage.
+-Examples of common Adhoc commands for system management tasks.
+-Exploring the power of Adhoc commands for quick tasks.
+
+
+Day 2: Ansible Adhoc Commands
+
+Today, we'll delve into Ansible's ad-hoc commands, powerful tools for performing quick tasks on your managed systems.
+-----------------------------------------------
+Passwordless Authentication:
+
+For seamless interaction with managed nodes, setting up passwordless SSH authentication is crucial. This allows Ansible to connect without manual password prompts. You can achieve this using tools like SSH
+
+Verify Passwordless SSH Access:
+   - Test the SSH connection to ensure it works without a password:
+     sh
+     ssh -i <key-pair> ubuntu@ip_address
+     
+   - You should be able to log in without being prompted for a password.
+
+Using SSH Keys with Ansible
+
+When running Ansible commands, you can specify the private key to use for SSH connections with the -i option.
+
+sh
+ansible all -m ping -i inventory.ini --key-pair
+
+---------------------------------------------------
+Ansible Inventory
+
+The inventory file is where you define your managed nodes (hosts) and organize them into groups. The inventory can be a simple INI file, a YAML file, or a dynamic inventory script.
+
+Example of a Simple INI Inventory File:
+
+ini
+ inventory.ini
+
+[webservers]
+web1 ansible_host=192.168.1.10 ansible_user=ubuntu
+web2 ansible_host=192.168.1.11 ansible_user=ubuntu
+
+[dbservers]
+db1 ansible_host=192.168.1.20 ansible_user=ubuntu
+db2 ansible_host=192.168.1.21 ansible_user=ubuntu
+
+
+Example of a YAML Inventory File:
+
+yaml
+ inventory.yml
+
+all:
+  hosts:
+    web1:
+      ansible_host: 192.168.1.10
+      ansible_user: ubuntu
+    web2:
+      ansible_host: 192.168.1.11
+      ansible_user: ubuntu
+    db1:
+      ansible_host: 192.168.1.20
+      ansible_user: ubuntu
+    db2:
+      ansible_host: 192.168.1.21
+      ansible_user: ubuntu
+  children:
+    webservers:
+      hosts:
+        web1:
+        web2:
+    dbservers:
+      hosts:
+        db1:
+        db2:
+
+
+Using the Inventory with Ansible:
+
+To run an Ansible command using the inventory file, use the -i option to specify the inventory file:
+
+sh
+ansible all -m ping -i inventory.ini ubuntu@ip
+
+
+Or with the YAML inventory:
+
+sh
+ansible all -m ping -i inventory.yml ubuntu@ip
+
+
+Example Playbook Using Inventory:
+
+Here’s an example of an Ansible playbook that targets the webservers group defined in the inventory:
+
+yaml
+ playbook.yml
+
+- name: Ensure web servers are up to date
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Update all packages to the latest version
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+
+Run the playbook with the specified inventory and private key:
+
+ansible-playbook playbook.yml -i inventory.ini ubuntu@ip playbook.yml
+
+-------------------------------------------------------------------
+
+AdHoc commands
+
+
+Sure, let's break down the provided ad-hoc commands and how you can use them to manage your infrastructure with Ansible:
+
+1. Testing Connectivity with Ping:
+
+
+ansible -i inventory.ini -m ping all, ubuntu@ip, [app], [db]
+
+
+This command uses the ping module to test connectivity with various targets defined in your inventory. Let's dissect it:
+
+ -i inventory.ini: Specifies the inventory file (inventory.ini) that defines your managed hosts.
+ -m ping: Instructs Ansible to use the ping module for this task.
+ all, ubuntu@ip, [app], [db]: These are target hosts or groups you want to ping.
+     all: Represents all hosts in your inventory (assuming a group named "all" exists).
+     ubuntu@ip: Pings a specific host named "ubuntu" with the provided IP address.
+     [app]: Targets all hosts in the group named "app" in your inventory.
+     [db]: Pings all hosts in the group named "db" in your inventory.
+
+2. Running Shell Commands with sudo:
+
+
+ansible -i inventory.ini -m shell -a "sudo ls /etc/" all
+
+
+This command leverages the shell module to execute a shell command with sudo privileges on all hosts:
+
+ -i inventory.ini: Similar to the previous command, specifies the inventory file.
+ -m shell: Indicates using the shell module to run a shell command.
+ -a "sudo ls /etc/": Defines the command to be executed. Here, sudo ls /etc/ lists the contents of the /etc/ directory with superuser privileges (be cautious with sudo).
+ all: Targets all hosts in your inventory.
+
+
+3. Managing Files with Playbooks:
+
+
+ansible-playbook -i inventory.ini filename.yaml
+
+
+This command executes an Ansible playbook named filename.yaml using the provided inventory file (inventory.ini). Playbooks are YAML files that define a series of tasks to be automated on your managed systems. They offer a more structured approach for complex configurations compared to ad-hoc commands.
+
+Here's a general structure of a playbook for managing files:
+
+yaml
+---
+- name: Copy a file to all hosts
+  hosts: all
+  tasks:
+    - name: Copy the file
+      copy:
+        src: /path/to/source/file   Path to the file on the Ansible control machine
+        dest: /path/to/destination/   Destination directory on managed hosts
+        owner: username   Optional: Set the owner of the copied file
+        group: groupname   Optional: Set the group of the copied file
+        mode: 0644   Optional: Set the permissions of the copied file (e.g., 0644 for read-write for owner, read-only for group and others)
+
+
+Explanation:
+
+ ---: YAML document start marker.
+ - name: Defines a task within the playbook.
+ hosts: all: Specifies the target hosts (all in this case).
+ tasks: List of tasks to be executed on the target hosts.
+ copy: The module used for file management.
+ src: Path to the source file on the Ansible control machine.
+ dest: Destination directory on the managed hosts where the file will be copied.
+ owner (optional): Sets the owner of the copied file.
+ group (optional): Sets the group of the copied file.
+ mode (optional): Sets the permissions of the copied file.
+
