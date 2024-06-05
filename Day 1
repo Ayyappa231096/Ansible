@@ -1,0 +1,53 @@
+Day 1: Introduction to Ansible and Getting Started
+
+-Overview of Ansible: What is Ansible, its advantages, and why use it?
+-Comparison with Shell and Python scripting for automation.
+-Installing Ansible on different platforms.
+-IDE(VS Code) and Plugin configuration.
+
+
+Introduction to Ansible and Getting Started
+
+Ansible is a powerful open-source IT automation tool that simplifies configuration management, application deployment, and orchestration.
+
+What is Ansible?
+
+Ansible automates tasks across your IT infrastructure, ensuring consistency and reducing manual effort. Unlike other tools, it's agentless, meaning you don't need to install additional software on managed devices.  
+
+Advantages of Ansible:
+
+ Simple and human-readable: Playbooks, which define automation tasks, use YAML, a straightforward language that resembles plain English. 
+ Agentless architecture: No need to install extra software on managed nodes, reducing complexity and maintenance overhead.
+ Platform-agnostic: Works on various operating systems like Linux, Windows, macOS, and network devices.
+ Modular design: Built-in modules handle specific tasks, allowing you to combine them for complex workflows.
+ Secure: Leverages SSH for secure communication with managed nodes.
+
+Why Use Ansible?
+
+Here are some compelling reasons to use Ansible:
+
+ Reduced errors: Automating repetitive tasks minimizes human error and ensures consistency.
+ Improved efficiency: Ansible streamlines workflows and frees up IT staff for more strategic tasks.
+ Scalability: Easily manage large numbers of systems across your infrastructure.
+ Reduced downtime: Automate deployments and updates with minimal service disruption.
+
+Comparison with Shell and Python Scripting:
+
+While shell and Python scripting can automate tasks, Ansible offers several advantages:
+
+ Readability: Playbooks are easier to understand and maintain compared to complex shell scripts.
+ Modularity: Ansible modules handle specific tasks, promoting code reusability.
+ Cross-platform compatibility: Ansible works seamlessly across different operating systems.
+
+Installing Ansible:
+
+Installation instructions vary depending on your platform. The official Ansible documentation provides detailed guides for installing on:
+
+ Linux distributions ([https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-centos-7](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-centos-7))
+ macOS ([https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html))
+ Windows ([https://docs.ansible.com/ansible/latest/os_guide/windows_usage.html](https://docs.ansible.com/ansible/latest/os_guide/windows_usage.html))
+
+IDE and Plugin Configuration:
+
+For a smooth development experience, consider using an IDE like Visual Studio Code (VS Code) with an Ansible extension. 
+These extensions provide features like syntax highlighting, code completion, and linting for playbooks.
